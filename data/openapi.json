@@ -1,0 +1,287 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Quotations API",
+    "version": "1.0.0",
+    "description": "The Quotations API is a REST API which brokers a collection of quoations which have been collated by the developer. It is intended for educational and demonstration purposes. There is an associated MCP server if you wish for your AI agents to interact with the collection of quotations."
+  },
+  "servers": [
+    {
+      "url": "{{baseURL}}"
+    }
+  ],
+  "paths": {
+    "/oauth/token": {
+      "parameters": [],
+      "post": {
+        "summary": "Get Access Token",
+        "tags": [
+          "Authorization"
+        ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": false,
+            "example": "application/json",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Accept",
+            "in": "header",
+            "required": false,
+            "example": "application/json",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {},
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "client_id": {
+                    "type": "string"
+                  },
+                  "client_secret": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "client_id": "{{client_id}}",
+                "client_secret": "{{client_secret}}"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/quotations": {
+      "parameters": [],
+      "get": {
+        "summary": "Search Quotations",
+        "tags": [
+          "Quotations"
+        ],
+        "parameters": [
+          {
+            "name": "Accept",
+            "in": "header",
+            "required": false,
+            "example": "application/json",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "example": "{{accessToken}}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {}
+      },
+      "post": {
+        "summary": "Create Quotation",
+        "tags": [
+          "Quotations"
+        ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": false,
+            "example": "application/json",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Accept",
+            "in": "header",
+            "required": false,
+            "example": "application/json",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "example": "{{accessToken}}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {},
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string"
+                  },
+                  "author": {
+                    "type": "string"
+                  },
+                  "source": {
+                    "type": "string",
+                    "format": "uri"
+                  }
+                }
+              },
+              "example": {
+                "text": "You have to do your own growing no matter how tall your grandfather was.",
+                "author": "Abraham Lincoln",
+                "source": "https://www.brainyquote.com/quotes/abraham_lincoln_108532"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/quotations/{quotation_id}": {
+      "parameters": [
+        {
+          "name": "quotation_id",
+          "in": "path",
+          "required": true,
+          "example": "68c06a1e076980e008e4779d",
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Get Quotation by ID",
+        "tags": [
+          "Quotations"
+        ],
+        "parameters": [
+          {
+            "name": "Accept",
+            "in": "header",
+            "required": false,
+            "example": "application/json",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "example": "{{accessToken}}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {}
+      },
+      "patch": {
+        "summary": "Update Quotation",
+        "tags": [
+          "Quotations"
+        ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": false,
+            "example": "application/json",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Accept",
+            "in": "header",
+            "required": false,
+            "example": "application/json",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "example": "{{accessToken}}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {},
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string"
+                  },
+                  "author": {
+                    "type": "string"
+                  },
+                  "source": {
+                    "type": "string",
+                    "format": "uri"
+                  }
+                }
+              },
+              "example": {
+                "text": "You have to do your own growing no matter how tall your grandfather was.",
+                "author": "Abraham Lincoln",
+                "source": "https://www.brainyquote.com/quotes/abraham_lincoln_108532"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Quotation",
+        "tags": [
+          "Quotations"
+        ],
+        "parameters": [
+          {
+            "name": "Accept",
+            "in": "header",
+            "required": false,
+            "example": "application/json",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "example": "{{accessToken}}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {}
+      }
+    }
+  }
+}
