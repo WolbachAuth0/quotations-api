@@ -14,10 +14,13 @@ const app = express()
 // middleware ...
 app.use(express.json())
 app.use(routerLogger)
-
-// TODO: decide if you want a whitelist or just have a global API.
 app.use(cors())
 app.use(helmet({ contentSecurityPolicy: false }))
+
+ // Set EJS as the view engine
+app.set('view engine', 'ejs');
+app.set('views', './views'); 
+
 
 // enforce https in production
 if(process.env.NODE_ENV === 'production') {

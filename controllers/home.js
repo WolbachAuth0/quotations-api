@@ -1,9 +1,12 @@
 const http = require('axios')
 const path = require('path')
 const { respond } = require('./../middleware/responseFormatter')
+const { QuotationModel } = require('./../models/Quotation')
 
 module.exports = {
   home,
+  docs,
+  health,
   specification,
   token
 }
@@ -24,7 +27,17 @@ function handleError (req, res, error) {
   }
 }
 
-function home (req, res) {
+async function home (req, res) {
+  const data = await QuotationModel.aggregate([{ $sample: { size: 1 } }])
+  
+  res.render('quotation', data[0]);
+}
+
+function docs (req, res) {
+  res.sendFile(path.join(__dirname, './../views/redoc.html'))
+}
+
+function health (req, res) {
   const package = require('./../package.json');
   const message = 'Welcome to the Quotations API.'
   const data = {
@@ -33,8 +46,6 @@ function home (req, res) {
     lisence: package.license
   }
   respond(req, res).ok({ message, data })
-
-  //res.sendFile(path.join(__dirname, './../views/redoc.html'))
 }
 
 function specification (req, res) {

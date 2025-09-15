@@ -1,0 +1,47 @@
+<nav class="navbar navbar-expand-lg bg-dark px-4" data-bs-theme="dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <img src="/img/mls-logo.svg" height="50"/>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <div class="collapse navbar-collapse" id="navbarColor01">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="<%= active == 'home' ? 'nav-link active' : 'nav-link' %>" href="/">Home</a>
+        </li>
+      <% if (isAuthenticated) { %>
+        <li class="nav-item">
+          <a class="<%= active == 'profile' ? 'nav-link active' : 'nav-link' %>" href="/profile">Profile</a>
+        </li>
+      <% } %>
+        <li class="nav-item">
+          <a class="nav-link" href="<%= isAuthenticated ? '/logout' : '/login' %>"><%= isAuthenticated ? 'Logout' : 'Login' %></a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="d-flex">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="https://fanatics-cic-demo.herokuapp.com/" target="__blank">Fanatics</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Clubs</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="https://miami-cic-demo-efcd557d3881.herokuapp.com" target="__blank">Miami</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- <div class="flex justify-center py-4">
+	<div class="w-5/6 lg:w-3/4 bg-white p-4 rounded overflow-hidden shadow-lg"> -->
+
+<main>
+  
