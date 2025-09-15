@@ -28,7 +28,7 @@ if(process.env.NODE_ENV === 'production') {
 }
 
 // Serve static files from the public directory
-app.use('/assets', serveStatic(path.join(__dirname, '../public/assets')));
+app.use('/assets', serveStatic(path.join(__dirname, './public')));
 
 // Routes
 app.use('/', require('./routes/home'));
