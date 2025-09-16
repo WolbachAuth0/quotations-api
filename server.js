@@ -5,7 +5,7 @@ const helmet = require('helmet')
 const path = require('path')
 
 // Import ErrorHandler
-const { globalErrorHandler } = require('./middleware/responseFormatter')
+const { globalJSONErrorHandler } = require('./middleware/responseFormatter')
 const enforceHTTPS = require('./middleware/enforceHTTPS')
 const { routerLogger, errorLogger } = require('./models/Logger')
 
@@ -31,11 +31,14 @@ if(process.env.NODE_ENV === 'production') {
 app.use('/assets', serveStatic(path.join(__dirname, './public')));
 
 // Routes
-app.use('/', require('./routes/home'));
+app.use('/', require('./routes/views'));
+app.use('/oauth', require('./routes/oauth'));
 app.use('/api/quotations', require('./routes/quotations'));
 
 // override express error handler
-app.use(globalErrorHandler) 
+app.use('/', require('./routes/errors'));
+
+app.use(globalJSONErrorHandler) 
 // express-winston errorLogger AFTER the other routes have been defined.
 app.use(errorLogger)
 
