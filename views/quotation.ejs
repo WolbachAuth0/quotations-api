@@ -2,18 +2,21 @@
 
 <div class="container">
 
-
   <div class="card mt-5 pa-3">
+    <div class="card-header text-white bg-info">
+      Quote of the day ...
+    </div>
+
     <div class="card-body">
       <blockquote class="blockquote mb-0">
         <p><%= text %></p>
         <footer class="blockquote-footer">
           <%= author %>
-          <!-- <cite title="Source Title">Source Title</cite> -->
         </footer>
       </blockquote>
     </div>
   </div>
+
 </div>
 		
 <%- include('partials/footer') -%>
