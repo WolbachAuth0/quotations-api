@@ -5,7 +5,7 @@ const helmet = require('helmet')
 const path = require('path')
 
 // Import ErrorHandler
-const { globalJSONErrorHandler } = require('./middleware/responseFormatter')
+const { globalErrorHandler } = require('./middleware/responseFormatter')
 const enforceHTTPS = require('./middleware/enforceHTTPS')
 const { routerLogger, errorLogger } = require('./models/Logger')
 
@@ -38,7 +38,7 @@ app.use('/api/quotations', require('./routes/quotations'));
 // override express error handler
 app.use('/', require('./routes/errors'));
 
-app.use(globalJSONErrorHandler) 
+app.use(globalErrorHandler) 
 // express-winston errorLogger AFTER the other routes have been defined.
 app.use(errorLogger)
 
