@@ -1,8 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/quotations');
-const { verifyJWT, checkJWTPermissions } = require('../middleware/auth');
+const { verifyJWT, checkJWTScopes } = require('../middleware/auth');
 const validate = require('./../middleware/schemaValidator');
+
+const options = {
+    customScopeKey: 'scope',
+    customUserKey: 'auth',
+    failWithError: true
+  }
 
 module.exports = router
 
@@ -10,11 +16,11 @@ router
   .route('/')
   .all(verifyJWT)
   .get(
-    checkJWTPermissions(['read:quotation']),
+    checkJWTScopes(['read:quotations'], options),
     controller.search
   )
   .post(
-    checkJWTPermissions(['create:quotation']),
+    checkJWTScopes(['create:quotations'], options),
     validate.requestBody(controller.schemas.quotation),
     controller.create
   )
@@ -30,15 +36,15 @@ router
   .route('/:quotation_id')
   .all(verifyJWT)
   .get(
-    checkJWTPermissions(['read:quotation']),
+    // checkJWTScopes(['read:quotations'], options),
     controller.getById
   )
   .patch(
-    checkJWTPermissions(['update:quotation']),
+    checkJWTScopes(['update:quotations'], options),
     validate.requestBody(controller.schemas.quotation),
     controller.update
   )
   .delete(
-    checkJWTPermissions(['delete:quotation']),
+    checkJWTScopes(['delete:quotations'], options),
     controller.remove
   )
