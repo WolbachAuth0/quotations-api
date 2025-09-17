@@ -1,0 +1,21 @@
+<div class="card p-2">
+  <div class="card-header text-white bg-primary d-flex justify-content-between">
+    Curated quotations by <%= author.fullName %>
+  </div>
+
+  <div class="row pt-2">
+
+  <% for (let column of columns) { %>
+    <div class="col-md-3">
+      <ul class="list-group">
+  <%   for (let quotation of column) { %>
+        <li class="list-group-item list-group-item-primary d-flex justify-content-between align-items-center">
+          <a href="/quotation/<%= quotation.id %>"><%= quotation.id %></a>
+        </li>
+  <%   } %>
+      </ul>
+    </div>
+  <% } %>
+  </div>
+
+</div>

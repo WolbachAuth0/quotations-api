@@ -56,30 +56,7 @@ async function quotations (req, res) {
   try {
     // fetch quote and author names
     const sample = await QuotationModel.getRandom()
-    const authorNames = await QuotationModel.find().distinct('author')
-    
-    // format authors into list elements
-    // TODO: Use redis to cache this author aggregation
-    const authorsList = authorNames.map(async function (name) {
-      const quoteCount = await QuotationModel.countDocuments({ author: name })
-      return {
-        fullname: name,
-        href: `/author?fullname=${encodeURIComponent(name)}`,
-        active: name == sample.author,
-        quoteCount
-      }
-    })
-    const authors = await Promise.all(authorsList)
-
-    // chunk author list into four even coloumns
-    const numColumns = 4
-    const columnHeight = Math.ceil(authors.length / numColumns)
-    const columns = []
-    for (let i = 0; i < numColumns; i++) {
-      const startIdx = i * columnHeight
-      const stopIdx = startIdx + columnHeight
-      columns.push(authors.slice(startIdx, stopIdx))
-    }
+    const columns = await authorColumns({ active: sample.author })
 
     // send data to template and render
     const data = {
@@ -94,10 +71,10 @@ async function quotations (req, res) {
 
 async function author (req, res) {
  try {
-    
     const authors = await AuthorModel.find({ fullName: req.query.fullname});
+    const author = authors[0]
 
-    if (!authors[0]) {
+    if (!author) {
       const data = {
         statusCode: 404,
         statusText: httpCodes[404],
@@ -106,11 +83,12 @@ async function author (req, res) {
       }
       return res.render('error', data);
     }
-
+    const columns = await quotationColumns({ author: author.fullName })
     const data = {
-      author: authors[0].format(),
+      author: author.format(),
+      columns
     }
-    console.log(data)
+
     res.render('author', data);
   } catch (error) {
     console.log(error)
@@ -134,7 +112,13 @@ async function quoteById (req, res) {
       return res.render('error', data);
     }
 
-    const data = quotation;
+    const columns = await authorColumns({ active: quotation.author })
+
+    // send data to template and render
+    const data = {
+      quotation: quotation.format(),
+      columns
+    }
     res.render('quotation', data);
   } catch (error) {
     handleError(req, res, error);
@@ -149,4 +133,53 @@ function specification (req, res) {
   const message = 'OpenAPI 3.0 specification for the Quotations API.'
   const data = require('../data/openapi.json')
   respond(req, res).ok({ message, data }) 
+}
+
+async function authorColumns({ active }) {
+   // find all distict authors
+  const authorNames = await QuotationModel.find().distinct('author')
+  
+  // format authors into list elements
+  // TODO: Use redis to cache this author aggregation
+  const authorsList = authorNames.map(async function (name) {
+    const quoteCount = await QuotationModel.countDocuments({ author: name })
+    return {
+      fullname: name,
+      href: `/author?fullname=${encodeURIComponent(name)}`,
+      active: name == active,
+      quoteCount
+    }
+  })
+  const authors = await Promise.all(authorsList)
+    
+  // chunk author list into four even coloumns
+  const numColumns = 4
+  const columnHeight = Math.ceil(authors.length / numColumns)
+  const columns = []
+  for (let i = 0; i < numColumns; i++) {
+    const startIdx = i * columnHeight
+    const stopIdx = startIdx + columnHeight
+    columns.push(authors.slice(startIdx, stopIdx))
+  }
+  return columns
+}
+
+async function quotationColumns({ author }) {
+  // get all quotes by author name
+  const quotationList = await QuotationModel.find({ author })
+  const quotations = quotationList.map(x => x.format())
+
+  // chunk quotation list into four even coloumns
+  const numColumns = 4
+  const columnHeight = Math.ceil(quotations.length / numColumns)
+  const columns = []
+  for (let i = 0; i < numColumns; i++) {
+    const startIdx = i * columnHeight
+    const stopIdx = startIdx + columnHeight
+    columns.push(quotations.slice(startIdx, stopIdx))
+    if (stopIdx >= quotations.length -1) {
+      break;
+    }
+  }
+  return columns
 }

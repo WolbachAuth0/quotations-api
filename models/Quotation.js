@@ -95,15 +95,12 @@ class Quotation {
    */
   Author () {}
 
+  
+
   static async getRandom () {
     const sample = await QuotationModel.aggregate([{ $sample: { size: 1 } }])
     const quotation = await QuotationModel.findById(sample[0]._id)
     return quotation
-  }
-
-  static async listAuthors () {
-    const authors = await QuotationModel.find().distinct('author')
-    return authors
   }
 
   /**
@@ -157,10 +154,10 @@ const options = {
   timestamps: true,
 }
 
-const quoteSchema = new Schema(structure, options)
-quoteSchema.loadClass(Quotation)
-quoteSchema.plugin(mongoosePaginate)
-const QuotationModel = model('Quote', quoteSchema)
+const schema = new Schema(structure, options)
+schema.loadClass(Quotation)
+schema.plugin(mongoosePaginate)
+const QuotationModel = model('Quote', schema)
 
 module.exports = {
   QuotationModel,

@@ -13,7 +13,7 @@ const structure = {
   imageURL: { type: String, trim: true }
 }
 
-const jsonSchema = {
+const authorSchema = {
   type: 'object',
   description: 'An Author document',
   required: ['fullName'],
@@ -153,17 +153,16 @@ class Author {
     }
     return data
   }
-
-  static jsonSchema() {
-    return jsonSchema
-  }
 }
 
 const options = { timestamps: true }
 
-const authorSchema = new Schema(structure, options)
-authorSchema.loadClass(Author)
-authorSchema.plugin(mongoosePaginate)
-const AuthorModel = model('Author', authorSchema)
+const schema = new Schema(structure, options)
+schema.loadClass(Author)
+schema.plugin(mongoosePaginate)
+const AuthorModel = model('Author', schema)
 
-module.exports = AuthorModel
+module.exports = {
+  AuthorModel,
+  authorSchema
+}
