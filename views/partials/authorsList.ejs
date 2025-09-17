@@ -6,17 +6,17 @@
 <%   for (let author of column) { %>
    
 <%     if (author.active) { %>
-      <li class="list-group-item list-group-item-secondary d-flex justify-content-between align-items-center active">
+      <li class="list-group-item list-group-item-danger d-flex justify-content-between align-items-center">
         <a href="<%= author.href %>"><%= author.fullname %></a>
         <span class="badge bg-success rounded-pill"><%= author.quoteCount %></span>
       </li>
 <%     } else { %>
-      <li class="list-group-item list-group-item-secondary d-flex justify-content-between align-items-center">
+      <li class="list-group-item list-group-item-primary d-flex justify-content-between align-items-center">
         <a href="<%= author.href %>"><%= author.fullname %></a>
         <span class="badge bg-success rounded-pill"><%= author.quoteCount %></span>
       </li>
 <%     } %>
-    
+
 <%   } %>
     </ul>
   </div>
