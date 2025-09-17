@@ -1,0 +1,21 @@
+  <div class="card mt-5 pa-3">
+    <div class="card-header text-white bg-info">
+      Author Profile
+    </div>
+
+    <div class="card-body">
+      <img class="card-img-top" src="<%= author.imageURL %>" alt="Author Image">
+
+      <h5 class="card-title"><%= author.fullName %></h5>
+      <p class="card-text"><%= author.bio %></p>
+      <p class="card-text">Born: <%= author.born %></p>
+      <p class="card-text">Died: <%= author.died %></p>
+      <p class="card-text">Reference: <%= author.reference %></p>
+
+    </div>
+
+    <div class="card-footer text-muted text-right">
+      author_id: <%= author.id %>
+    </div>
+
+  </div>

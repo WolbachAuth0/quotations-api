@@ -51,7 +51,14 @@ const quotationSchema = {
 }
 
 class Quotation {
-  constructor () {}
+  constructor ({ id, text, author, source, }) {
+
+  }
+
+  get authorLink () {
+    const fullname = encodeURIComponent(this.author)
+    return `/author?fullname=${fullname}`
+  }
 
   /**
    * Formats the mongoose model as JSON for response to a request.
@@ -62,6 +69,7 @@ class Quotation {
       id: this._id,
       text: this.text,
       author: this.author,
+      authorLink: this.authorLink,
       source: this.source,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
@@ -86,6 +94,17 @@ class Quotation {
    * @returns {Author} The Author object associated. 
    */
   Author () {}
+
+  static async getRandom () {
+    const sample = await QuotationModel.aggregate([{ $sample: { size: 1 } }])
+    const quotation = await QuotationModel.findById(sample[0]._id)
+    return quotation
+  }
+
+  static async listAuthors () {
+    const authors = await QuotationModel.find().distinct('author')
+    return authors
+  }
 
   /**
    * Parses a url query into a mongoose-paginate-v2 query.

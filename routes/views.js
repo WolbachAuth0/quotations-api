@@ -7,13 +7,19 @@ module.exports = router;
 router
   .route('/')
   .get(
-    controller.home
+    controller.quotations
   );
 
 router
   .route('/quotation/:quotation_id')
   .get(
     controller.quoteById
+  )
+
+router
+  .route('/author')
+  .get(
+    controller.author
   )
 
 router

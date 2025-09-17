@@ -1,0 +1,19 @@
+  <div class="card my-5 pa-3 text-white bg-secondary">
+    <div class="card-header text-white bg-primary d-flex justify-content-between">
+      Quote of the day ...
+      <span class="badge bg-secondary rounded-pill"><%= quotation.id %></span>
+    </div>
+
+    <div class="card-body">
+      
+      <blockquote class="blockquote mb-0">
+        <p><%= quotation.text %></p>
+        <br>
+        <footer class="blockquote-footer text-white">
+          <a href="<%= quotation.authorLink || '/' %>"><%= quotation.author %></a>
+        </footer>
+      </blockquote>
+
+    </div>
+
+  </div>

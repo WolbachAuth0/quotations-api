@@ -8,7 +8,6 @@ const structure = {
   lastName: { type: String, required: false, trim: true },
   born: { type: Date, required: false },
   died: { type: Date, required: false },
-  profession: { type: String, trim: true },
   bio: { type: String, trim: true },
   reference: { type: String, trim: true },
   imageURL: { type: String, trim: true }
@@ -49,11 +48,6 @@ const jsonSchema = {
       type: ['string', 'null'],
       description: 'The date that the author died, or null.',
       example: '1865-04-15T04:00:00.000Z'
-    },
-    profession: {
-      type: 'string',
-      description: 'A description of the author\'s profession.',
-      example: 'President of the United States'
     },
     bio: {
       type: 'string',
@@ -102,7 +96,6 @@ class Author {
       lastName: this.lastName,
       born: this.born,
       died: this.died,
-      profession: this.profession,
       bio: this.bio,
       reference: this.reference,
       imageURL: this.imageURL,
@@ -120,7 +113,6 @@ class Author {
     this.lastName = body.lastName ?? this.lastName
     this.born = new Date(body.born) ?? this.born
     this.died = new Date(body.died) ?? this.died
-    this.profession = body.profession ?? this.profession
     this.bio = body.bio ?? this.bio
     this.reference = body.reference ?? this.reference
     this.imageURL = body.imageURL ?? this.imageURL
@@ -155,7 +147,6 @@ class Author {
       lastName: body.lastName,
       born: body.born ? new Date(body.born) : null,
       died: body.died ? new Date(body.died) : null,
-      profession: body.profession,
       bio: body.bio,
       reference: body.reference,
       imageURL: body.imageURL

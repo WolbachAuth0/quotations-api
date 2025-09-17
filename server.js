@@ -21,7 +21,6 @@ app.use(helmet({ contentSecurityPolicy: false }))
 app.set('view engine', 'ejs');
 app.set('views', './views'); 
 
-
 // enforce https in production
 if(process.env.NODE_ENV === 'production') {
   app.use(enforceHTTPS)
@@ -34,6 +33,7 @@ app.use('/assets', serveStatic(path.join(__dirname, './public')));
 app.use('/', require('./routes/views'));
 app.use('/oauth', require('./routes/oauth'));
 app.use('/api/quotations', require('./routes/quotations'));
+app.use('/api/authors', require('./routes/authors'))
 
 // override express error handler
 app.use('/', require('./routes/errors'));

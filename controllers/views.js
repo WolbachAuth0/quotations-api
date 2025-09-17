@@ -1,10 +1,12 @@
 const path = require('path')
 const { respond, httpCodes } = require('../middleware/responseFormatter')
 const { QuotationModel } = require('../models/Quotation')
+const { AuthorModel }= require('../models/Author')
 
 module.exports = {
-  home,
+  quotations,
   quoteById,
+  author,
   docs,
   specification
 }
@@ -14,8 +16,8 @@ function handleError (req, res, error) {
   let data = {
     statusCode,
     statusText: httpCodes[statusCode],
-    error: 'Server Error',
-    imageSRC: '500-ServerError.png'
+    message: 'Server Error',
+    imageSRC: '/assets/500-ServerError.png',
   }
   // handle special cases ...
   if (String(error.message).includes('Cast to ObjectId failed')) {
@@ -23,7 +25,7 @@ function handleError (req, res, error) {
     data = {
       statusCode,
       statusText: httpCodes[statusCode],
-      error: 'The resource was not found.',
+      message: 'The resource was not found.',
       imageSRC: '/assets/404-NotFound.png'
     }
   } else if (error?.status == 401) {
@@ -31,7 +33,7 @@ function handleError (req, res, error) {
     data = {
       statusCode,
       statusText: httpCodes[statusCode],
-      error: 'Unauthorized',
+      message: 'Unauthorized',
       imageSRC: '/assets/401-Unauthorized.png'
     }
   } else if (error?.status == 403) {
@@ -39,18 +41,79 @@ function handleError (req, res, error) {
     data = {
       statusCode,
       statusText: httpCodes[statusCode],
-      error: 'Access denied.',
+      message: 'Access denied.',
       imageSRC: '/assets/403-Forbidden.png'
     }
+  } else {
+    console.log(error)
   }
+  
+  data.error = error
   res.render('error', data)
 }
 
-async function home (req, res) {
+async function quotations (req, res) {
   try {
-    const data = await QuotationModel.aggregate([{ $sample: { size: 1 } }])
-    res.render('quotation', data[0]);
+    // fetch quote and author names
+    const sample = await QuotationModel.getRandom()
+    const authorNames = await QuotationModel.find().distinct('author')
+    
+    // format authors into list elements
+    // TODO: Use redis to cache this author aggregation
+    const authorsList = authorNames.map(async function (name) {
+      const quoteCount = await QuotationModel.countDocuments({ author: name })
+      return {
+        fullname: name,
+        href: `/author?fullname=${encodeURIComponent(name)}`,
+        active: name == sample.author,
+        quoteCount
+      }
+    })
+    const authors = await Promise.all(authorsList)
+
+    // chunk author list into four even coloumns
+    const numColumns = 4
+    const columnHeight = Math.ceil(authors.length / numColumns)
+    const columns = []
+    for (let i = 0; i < numColumns; i++) {
+      const startIdx = i * columnHeight
+      const stopIdx = startIdx + columnHeight
+      columns.push(authors.slice(startIdx, stopIdx))
+    }
+
+    // send data to template and render
+    const data = {
+      quotation: sample.format(),
+      columns
+    }
+    res.render('quotation', data);
   } catch (error) {
+    handleError(req, res, error);
+  }
+}
+
+async function author (req, res) {
+ try {
+    
+    const authors = await AuthorModel.find({ fullName: req.query.fullname});
+
+    if (!authors[0]) {
+      const data = {
+        statusCode: 404,
+        statusText: httpCodes[404],
+        message: `The author ${req.query.fullname} was not found.`,
+        imageSRC: '/assets/404-NotFound.png',
+      }
+      return res.render('error', data);
+    }
+
+    const data = {
+      author: authors[0].format(),
+    }
+    console.log(data)
+    res.render('author', data);
+  } catch (error) {
+    console.log(error)
     handleError(req, res, error);
   }
 }

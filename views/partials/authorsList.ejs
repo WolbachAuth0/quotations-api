@@ -1,0 +1,26 @@
+<div class="row ">
+
+<% for (let column of columns) { %>
+  <div class="col-md-3">
+     <ul class="list-group">
+<%   for (let author of column) { %>
+   
+<%     if (author.active) { %>
+      <li class="list-group-item list-group-item-secondary d-flex justify-content-between align-items-center active">
+        <a href="<%= author.href %>"><%= author.fullname %></a>
+        <span class="badge bg-success rounded-pill"><%= author.quoteCount %></span>
+      </li>
+<%     } else { %>
+      <li class="list-group-item list-group-item-secondary d-flex justify-content-between align-items-center">
+        <a href="<%= author.href %>"><%= author.fullname %></a>
+        <span class="badge bg-success rounded-pill"><%= author.quoteCount %></span>
+      </li>
+<%     } %>
+    
+<%   } %>
+    </ul>
+  </div>
+<% } %>
+  
+
+</div>
