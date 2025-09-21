@@ -88,7 +88,6 @@ async function author (req, res) {
       author: author.format(),
       columns
     }
-
     res.render('author', data);
   } catch (error) {
     console.log(error)
@@ -155,12 +154,13 @@ async function authorColumns({ active }) {
   // chunk author list into four even coloumns
   const numColumns = 4
   const columnHeight = Math.ceil(authors.length / numColumns)
-  const columns = []
-  for (let i = 0; i < numColumns; i++) {
-    const startIdx = i * columnHeight
-    const stopIdx = startIdx + columnHeight
-    columns.push(authors.slice(startIdx, stopIdx))
-  }
+  const columns = [
+    authors.slice(0, columnHeight),
+    authors.slice(columnHeight, 2*columnHeight),
+    authors.slice(2*columnHeight, 3*columnHeight),
+    authors.slice(3*columnHeight),
+  ]
+  
   return columns
 }
 
@@ -172,14 +172,12 @@ async function quotationColumns({ author }) {
   // chunk quotation list into four even coloumns
   const numColumns = 4
   const columnHeight = Math.ceil(quotations.length / numColumns)
-  const columns = []
-  for (let i = 0; i < numColumns; i++) {
-    const startIdx = i * columnHeight
-    const stopIdx = startIdx + columnHeight
-    columns.push(quotations.slice(startIdx, stopIdx))
-    if (stopIdx >= quotations.length -1) {
-      break;
-    }
-  }
+  const columns = [
+    quotations.slice(0, columnHeight).map((x) => ({ id: x.id, text: x.text })),
+    quotations.slice(columnHeight, 2 * columnHeight).map((x) => ({ id: x.id, text: x.text })),
+    quotations.slice(2*columnHeight, 3*columnHeight).map((x) => ({ id: x.id, text: x.text })),
+    quotations.slice(3*columnHeight).map((x) => ({ id: x.id, text: x.text }))
+  ]
+
   return columns
 }

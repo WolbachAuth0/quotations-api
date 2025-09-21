@@ -10,7 +10,10 @@
       <ul class="list-group">
   <%   for (let quotation of column) { %>
         <li class="list-group-item list-group-item-primary d-flex justify-content-between align-items-center">
-          <a href="/quotation/<%= quotation.id %>"><%= quotation.id %></a>
+          <span data-bs-custom-class="custom-tooltip" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="<%= quotation.text %>">
+            <a href="/quotation/<%= quotation.id %>"><%= quotation.id %></a>
+          </span>
+          
         </li>
   <%   } %>
       </ul>
