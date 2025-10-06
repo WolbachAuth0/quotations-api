@@ -7,7 +7,9 @@
     "start": "node start.js",
     "dev": "nodemon start.js",
     "load:authors": "node ./scripts/load-authors.js",
-    "load:quotes": "node ./scripts/load-quotations.js"
+    "update:authors": "node ./scripts/update-authors.js",
+    "load:quotes": "node ./scripts/load-quotations.js",
+    "backup": "node ./scripts/backup-data.js"
   },
   "keywords": [
     "rest",
@@ -37,6 +39,7 @@
   },
   "devDependencies": {
     "dotenv": "^17.2.2",
+    "jsonfile": "^6.2.0",
     "nodemon": "^3.1.10"
   }
 }
