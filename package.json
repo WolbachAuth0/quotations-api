@@ -5,7 +5,9 @@
   "main": "start.js",
   "scripts": {
     "start": "node start.js",
-    "dev": "nodemon start.js"
+    "dev": "nodemon start.js",
+    "load:authors": "node ./scripts/load-authors.js",
+    "load:quotes": "node ./scripts/load-quotations.js"
   },
   "keywords": [
     "rest",

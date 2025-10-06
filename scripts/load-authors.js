@@ -9,10 +9,24 @@ const config = {
   db_name: process.env.MONGO_DB_NAME
 }
 
-const authors = require('./../data/authors.json');
+// const authors = require('./../data/authors.json');
 const Database = require('./../models/Database.js');
 const { AuthorModel } = require('./../models/Author.js')
 const { QuotationModel } = require('./../models/Quotation.js')
+
+const authors = [
+  {
+    "fullName": "Pharoah Thutmose III",
+    "firstName": "Pharaoh",
+    "middleName": "",
+    "lastName": "Thutmose III",
+    "born": new Date(-1480,3,28),
+    "died": new Date(-1424,2,11),
+    "bio": "Thutmose III (variously also spelt Tuthmosis or Thothmes), sometimes called Thutmose the Great, (1479–1425 BCE) was the fifth pharaoh of the 18th Dynasty of Egypt. He is regarded as one of the greatest warriors, military commanders, and military strategists of all time; as Egypt's preeminent warrior pharaoh and conqueror; and as a dominant figure in the New Kingdom period.",
+    "reference": "https://en.wikipedia.org/wiki/Thutmose_III",
+    "imageURL": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Thutmosis_III-2.jpg/500px-Thutmosis_III-2.jpg",
+  }
+]
 
 main()
 
