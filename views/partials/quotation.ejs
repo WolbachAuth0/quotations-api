@@ -7,7 +7,11 @@
     <div class="card-body">
       
       <blockquote class="blockquote mb-0">
-        <p><%= quotation.text %></p>
+        <p>
+          <span class="material-symbols-outlined flipped">format_quote</span>
+          <%= quotation.text %>
+          <span class="material-symbols-outlined">format_quote</span>
+        </p>
         <br>
         <footer class="blockquote-footer text-white">
           <a href="<%= quotation.authorLink || '/' %>"><%= quotation.author %></a>
