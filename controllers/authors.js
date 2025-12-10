@@ -13,7 +13,7 @@ module.exports = {
   }
 }
 
-// Get all brands
+// Get all Authors
 async function search (req, res) {
   try {
     const { filter, options } = AuthorModel.parseQuery(req.query);
@@ -37,7 +37,7 @@ async function search (req, res) {
   }
 }
 
-// Get a single brand by ID
+// Get a single Author by ID
 async function getById (req, res) {
   try {
     const { author_id } = req.params;
@@ -56,6 +56,7 @@ async function getById (req, res) {
   }
 }
 
+// Get a single Author at random
 async function getRandom (req, res) {
   try {
     const size = Number.isInteger(parseInt(req.query?.size)) ? parseInt(req.query?.size) : 1
@@ -67,6 +68,7 @@ async function getRandom (req, res) {
   }
 }
 
+// Update an Author by ID
 async function update (req, res) {
   try {
     const { author_id } = req.params;
@@ -90,6 +92,7 @@ async function update (req, res) {
   }
 }
 
+// // Create a new Author
 // async function create (req, res) {
 //   try {
 //     const body = AuthorModel.parseInput(req.body);
@@ -102,6 +105,7 @@ async function update (req, res) {
 //   }
 // }
 
+// // Delete an Author
 // async function remove (req, res) {
 //   try {
 //     const { author_id } = req.params;
