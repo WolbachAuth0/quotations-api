@@ -17,8 +17,8 @@
         <div class="card text-white">
           <div class="card-body">          
             <p class="card-text"><%= author.bio %></p>
-            <p class="card-text">Born: <%= author.born %></p>
-            <p class="card-text">Died: <%= author.died %></p>
+            <p class="card-text">Born: <%= author.born ? author.born : '???' %></p>
+            <p class="card-text">Died: <%= author.died ? author.died : '---' %></p>
             <p class="card-text">Reference: <%= author.reference %></p>
           </div>
         </div>
