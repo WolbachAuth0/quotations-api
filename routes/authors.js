@@ -19,6 +19,11 @@ router
     checkJWTScopes(['read:authors'], options),
     controller.search
   )
+  .post(
+    checkJWTScopes(['create:authors'], options),
+    validate.requestBody(controller.schemas.author),
+    controller.create
+  );
 
 router
   .route('/random')
@@ -36,7 +41,7 @@ router
   )
   .patch(
     checkJWTScopes(['update:authors'], options),
-    validate.requestBody(controller.schemas.quotation),
+    validate.requestBody(controller.schemas.author),
     controller.update
   )
   // .delete(
