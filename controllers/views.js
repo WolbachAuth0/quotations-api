@@ -5,6 +5,7 @@ const { AuthorModel }= require('../models/Author')
 
 module.exports = {
   quotations,
+  kitchenSink,
   quoteById,
   author,
   docs,
@@ -56,12 +57,41 @@ async function quotations (req, res) {
   try {
     // fetch quote and author names
     const sample = await QuotationModel.getRandom()
-    const columns = await authorColumns({ active: sample.author })
+    const authorColumns = await makeAuthorColumns({ active: sample.author })
 
     // send data to template and render
     const data = {
       quotation: sample.format(),
-      columns
+      authorColumns
+    }
+    res.render('quotation', data);
+  } catch (error) {
+    handleError(req, res, error);
+  }
+}
+
+async function quoteById (req, res) {
+  try {
+    const { quotation_id } = req.params;
+    const quotation = await QuotationModel.findById(quotation_id);
+
+    if (!quotation) {
+      const statusCode = 404
+      const data = {
+        statusCode,
+        statusText: httpCodes[statusCode],
+        error: `The quotation with id: ${quotation_id} was not found.`,
+        imageSRC: '/assets/404-NotFound.png'
+      }
+      return res.render('error', data);
+    }
+
+    const authorColumns = await makeAuthorColumns({ active: quotation.author })
+
+    // send data to template and render
+    const data = {
+      quotation: quotation.format(),
+      authorColumns
     }
     res.render('quotation', data);
   } catch (error) {
@@ -83,10 +113,10 @@ async function author (req, res) {
       }
       return res.render('error', data);
     }
-    const columns = await quotationColumns({ author: author.fullName })
+    const quotationColumns = await makeQuotationColumns({ author: author.fullName })
     const data = {
       author: author.format(),
-      columns
+      quotationColumns
     }
     res.render('author', data);
   } catch (error) {
@@ -95,46 +125,42 @@ async function author (req, res) {
   }
 }
 
-async function quoteById (req, res) {
+async function kitchenSink (req, res) {
   try {
-    const { quotation_id } = req.params;
-    const quotation = await QuotationModel.findById(quotation_id);
-
-    if (!quotation) {
-      const statusCode = 404
-      const data = {
-        statusCode,
-        statusText: httpCodes[statusCode],
-        error: `The quotation with id: ${quotation_id} was not found.`,
-        imageSRC: '/assets/404-NotFound.png'
-      }
-      return res.render('error', data);
-    }
-
-    const columns = await authorColumns({ active: quotation.author })
+    // fetch quote and author names
+    const sample = await QuotationModel.getRandom()
+    const authors = await AuthorModel.find({ fullName: sample.author });
+    const author = authors[0]
+    const authorColumns = await makeAuthorColumns({ active: sample.author })
+    const quotationColumns = await makeQuotationColumns({ author: sample.author })
 
     // send data to template and render
     const data = {
-      quotation: quotation.format(),
-      columns
+      quotation: sample.format(),
+      author: author.format(),
+      authorColumns,
+      quotationColumns
     }
-    res.render('quotation', data);
+    res.render('kitchenSink', data);
   } catch (error) {
     handleError(req, res, error);
   }
 }
 
+// Render the API documentation
 function docs (req, res) {
   res.sendFile(path.join(__dirname, './../views/redoc.html'))
 }
 
+// Return the OpenAPI Specification as JSON
 function specification (req, res) {
   const message = 'OpenAPI 3.0 specification for the Quotations API.'
   const data = require('../data/openapi.json')
   respond(req, res).ok({ message, data }) 
 }
 
-async function authorColumns({ active }) {
+// Helper functions
+async function makeAuthorColumns({ active }) {
    // find all distict authors
   const authorNames = await QuotationModel.find().distinct('author')
   
@@ -164,7 +190,7 @@ async function authorColumns({ active }) {
   return columns
 }
 
-async function quotationColumns({ author }) {
+async function makeQuotationColumns({ author }) {
   // get all quotes by author name
   const quotationList = await QuotationModel.find({ author })
   const quotations = quotationList.map(x => x.format())
