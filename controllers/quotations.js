@@ -30,7 +30,7 @@ async function search (req, res) {
       nextPage: found.nextPage,
       docs: found.docs.map((x) => x.format())
     }
-    const message = `Found ${data.length} quotations matching your query.`;
+    const message = `Found ${data.totalDocs} quotations matching your query.`;
     respond(req, res).ok({ message, data });
   } catch (error) {
     handleError(req, res, error);
