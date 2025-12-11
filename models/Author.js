@@ -94,8 +94,8 @@ class Author {
       firstName: this.firstName,
       middleName: this.middleName,
       lastName: this.lastName,
-      born: this.born,
-      died: this.died,
+      born: this.born instanceof Date ? this.born.toLocaleDateString('en-US') : null,
+      died: this.died instanceof Date ? this.died.toLocaleDateString('en-US') : null,
       bio: this.bio,
       reference: this.reference,
       imageURL: this.imageURL,
@@ -111,8 +111,23 @@ class Author {
     this.firstName = body.firstName ?? this.firstName
     this.middleName = body.middleName ?? this.middleName
     this.lastName = body.lastName ?? this.lastName
-    this.born = new Date(body.born) ?? this.born
-    this.died = new Date(body.died) ?? this.died
+
+    if (body.born == null || Date.parse(body.born) == 0) {
+      this.born = null
+    } else if (body.born) {
+      this.born = new Date(body.born)
+    } else if (Date.parse(this.born) == 0) {
+      this.born = null
+    }
+
+    if (body.died == null || Date.parse(body.died) == 0) {
+      this.died = null
+    } else if (body.died) {
+      this.died = new Date(body.died)
+    } else if (Date.parse(this.died) == 0) {
+      this.died = null
+    }
+
     this.bio = body.bio ?? this.bio
     this.reference = body.reference ?? this.reference
     this.imageURL = body.imageURL ?? this.imageURL
