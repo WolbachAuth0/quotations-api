@@ -76,14 +76,7 @@ async function quoteById (req, res) {
     const quotation = await QuotationModel.findById(quotation_id);
 
     if (!quotation) {
-      const statusCode = 404
-      const data = {
-        statusCode,
-        statusText: httpCodes[statusCode],
-        error: `The quotation with id: ${quotation_id} was not found.`,
-        imageSRC: '/assets/404-NotFound.png'
-      }
-      return res.render('error', data);
+      return notFound(req, res)
     }
 
     const authorColumns = await makeAuthorColumns({ active: quotation.author })
@@ -103,20 +96,18 @@ async function author (req, res) {
  try {
     const authors = await AuthorModel.find({ fullName: req.query.fullname});
     const author = authors[0]
-
+    
     if (!author) {
-      const data = {
-        statusCode: 404,
-        statusText: httpCodes[404],
-        message: `The author ${req.query.fullname} was not found.`,
-        imageSRC: '/assets/404-NotFound.png',
-      }
-      return res.render('error', data);
+      return notFound(req, res)
     }
+
     const quotationColumns = await makeQuotationColumns({ author: author.fullName })
+    const authorColumns = await makeAuthorColumns({ active: author.fullName })
+
     const data = {
       author: author.format(),
-      quotationColumns
+      quotationColumns,
+      authorColumns
     }
     res.render('author', data);
   } catch (error) {
@@ -206,4 +197,20 @@ async function makeQuotationColumns({ author }) {
   ]
 
   return columns
+}
+
+function notFound (req, res) { 
+  let message
+  if (req.originalUrl.includes('/author')) {
+    message = `The author ${req.query.fullname} was not found.`
+  } else if (req.originalUrl.includes('/quotation')) {
+    message = `The quotation with id: ${req.params.quotation_id} was not found.`
+  }
+  const data = {
+    statusCode: 404,
+    statusText: httpCodes[statusCode],
+    imageSRC: '/assets/404-NotFound.png',
+    message
+  }
+  return res.render('error', data);
 }
