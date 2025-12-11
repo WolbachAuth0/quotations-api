@@ -6,7 +6,7 @@ module.exports = {
   getById,
   getRandom,
   update,
-  // create,
+  create,
   // remove,
   schemas: {
     author: authorSchema,
@@ -30,7 +30,7 @@ async function search (req, res) {
       nextPage: found.nextPage,
       docs: found.docs.map((x) => x.format())
     }
-    const message = `Found ${data.length} authors matching your query.`;
+    const message = `Found ${data.totalDocs} authors matching your query.`;
     respond(req, res).ok({ message, data });
   } catch (error) {
     handleError(req, res, error);
@@ -92,18 +92,18 @@ async function update (req, res) {
   }
 }
 
-// // Create a new Author
-// async function create (req, res) {
-//   try {
-//     const body = AuthorModel.parseInput(req.body);
-//     const author = new AuthorModel(body);
-//     const data = await author.save();
-//     const message = `Created new author document with id: ${author.id}.`;
-//     respond(req, res).created({ message, data });
-//   } catch (error) {
-//     handleError(req, res, error);
-//   }
-// }
+// Create a new Author
+async function create (req, res) {
+  try {
+    const body = AuthorModel.parseInput(req.body);
+    const author = new AuthorModel(body);
+    const data = await author.save();
+    const message = `Created new author document with id: ${author.id}.`;
+    respond(req, res).created({ message, data });
+  } catch (error) {
+    handleError(req, res, error);
+  }
+}
 
 // // Delete an Author
 // async function remove (req, res) {

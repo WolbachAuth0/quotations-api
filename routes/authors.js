@@ -31,7 +31,7 @@ router
   .route('/:author_id')
   .all(verifyJWT)
   .get(
-    // checkJWTScopes(['read:authors'], options),
+    checkJWTScopes(['read:authors'], options),
     controller.getById
   )
   .patch(
