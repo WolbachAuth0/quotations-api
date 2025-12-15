@@ -120,28 +120,6 @@ async function author (req, res) {
   }
 }
 
-async function kitchenSink (req, res) {
-  try {
-    // fetch quote and author names
-    const sample = await QuotationModel.getRandom()
-    const authors = await AuthorModel.find({ fullName: sample.author });
-    const author = authors[0]
-    const authorColumns = await makeAuthorColumns({ active: sample.author })
-    const quotationColumns = await makeQuotationColumns({ author: sample.author })
-
-    // send data to template and render
-    const data = {
-      quotation: sample.format(),
-      author: author.format(),
-      authorColumns,
-      quotationColumns
-    }
-    res.render('kitchenSink', data);
-  } catch (error) {
-    handleError(req, res, error);
-  }
-}
-
 // Render the API documentation
 function docs (req, res) {
   res.sendFile(path.join(__dirname, './../views/redoc.html'))
