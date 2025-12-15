@@ -2,6 +2,7 @@ const path = require('path')
 const { respond, httpCodes } = require('../middleware/responseFormatter')
 const { QuotationModel } = require('../models/Quotation')
 const { AuthorModel }= require('../models/Author')
+const moment = require('moment');
 
 module.exports = {
   quotations,
@@ -104,8 +105,11 @@ async function author (req, res) {
     const quotationColumns = await makeQuotationColumns({ author: author.fullName })
     const authorColumns = await makeAuthorColumns({ active: author.fullName })
 
+    let authorData = author.format();
+    authorData.born = formatDate(authorData.born);
+    authorData.died = formatDate(authorData.died);
     const data = {
-      author: author.format(),
+      author: authorData,
       quotationColumns,
       authorColumns
     }
@@ -197,6 +201,21 @@ async function makeQuotationColumns({ author }) {
   ]
 
   return columns
+}
+
+function formatDate (date) {
+  if (!date) {
+    return null
+  }
+
+  const DD = moment(date);
+  if (DD.year() < 1) {
+    const year = Math.abs(DD.year()).toString();
+    return `${DD.format('ddd, MMM Do')} ${year} BCE`
+  } else {
+    const dateFormat = 'ddd, MMM Do YYYY';
+    return DD.format(dateFormat);
+  }  
 }
 
 function notFound (req, res) { 

@@ -49,7 +49,7 @@ async function getById (req, res) {
     }
 
     const message = `Found author document with id: ${author_id}`;
-    const data = author;
+    const data = author.format();
     respond(req, res).ok({ message, data });
   } catch (error) {
     handleError(req, res, error);
@@ -60,7 +60,11 @@ async function getById (req, res) {
 async function getRandom (req, res) {
   try {
     const size = Number.isInteger(parseInt(req.query?.size)) ? parseInt(req.query?.size) : 1
-    const data = await AuthorModel.aggregate([{ $sample: { size } }])
+    const sample = await AuthorModel.aggregate([{ $sample: { size } }]);
+    const data = sample.map(function (json) {
+      const author = new AuthorModel(json);
+      return author.format();
+    })
     const message = `Found ${data.length} authors matching your query.`;
     respond(req, res).ok({ message, data });
   } catch (error) {
@@ -85,7 +89,7 @@ async function update (req, res) {
     const updated = await found.save();
 
     const message = `Updated author document with id: ${author_id}`;
-    const data = updated
+    const data = updated.format();
     respond(req, res).ok({ message, data });
   } catch (error) {
     handleError(req, res, error);
@@ -97,7 +101,8 @@ async function create (req, res) {
   try {
     const body = AuthorModel.parseInput(req.body);
     const author = new AuthorModel(body);
-    const data = await author.save();
+    const savedAuthor = await author.save();
+    const data = savedAuthor.format();
     const message = `Created new author document with id: ${author.id}.`;
     respond(req, res).created({ message, data });
   } catch (error) {

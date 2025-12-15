@@ -85,8 +85,6 @@ const authorSchema = {
 class Author {
   constructor() {}
 
-  // get fullName() { return `${this.firstName} ${this.lastName}` }
-
   format() {
     const formatted = {
       id: this._id,
@@ -94,14 +92,14 @@ class Author {
       firstName: this.firstName,
       middleName: this.middleName,
       lastName: this.lastName,
-      born: this.born instanceof Date ? this.born.toLocaleDateString('en-US') : null,
-      died: this.died instanceof Date ? this.died.toLocaleDateString('en-US') : null,
+      born: this.born instanceof Date ? this.born.valueOf() : null,
+      died: this.died instanceof Date ? this.born.valueOf() : null,
       bio: this.bio,
       reference: this.reference,
       imageURL: this.imageURL,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
-      revision: this._v
+      revision: this.__v
     }
     return formatted
   }
