@@ -6,7 +6,6 @@ const moment = require('moment');
 
 module.exports = {
   quotations,
-  kitchenSink,
   quoteById,
   author,
   docs,
